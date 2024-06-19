@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  api:
+    container_name: redis_starter_api
+    build: .
+    restart: always
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+    networks:
+      - local_network
+    depends_on:
+      - redis
+    logging:
+      driver: 'json-file'
+      options:
+        max-file: '5'
+        max-size: '10m'
+
+  redis:
+    container_name: template_redis_db
+    image: redis:5
+    volumes:
+      - redis_volume:/data
+    networks:
+      - local_network
+
+networks:
+  local_network:
+
+volumes:
+  redis_volume:
+    driver: local
